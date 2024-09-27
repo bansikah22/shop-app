@@ -1,0 +1,24 @@
+environment: prod
+
+frontend:
+  image:
+    repository: bansikah/shop-frontend
+    tag: "1.1"
+  replicaCount: 2
+
+backend:
+  image:
+    repository: bansikah/shop-backend
+    tag: "1.1"
+  replicaCount: 2
+
+postgres:
+  image:
+    repository: postgres
+    tag: latest
+  database: shopdb
+  username: postgresuser
+  password: prodpassword
+
+ingress:
+  host: shop-app-prod.local

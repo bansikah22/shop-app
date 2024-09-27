@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+data:
+  SPRING_PROFILES_ACTIVE: {{ .Values.environment }}
+  SPRING_DATASOURCE_URL: jdbc:postgresql://{{ .Release.Name }}-postgres:5432/{{ .Values.postgres.database }}
+  SPRING_JPA_HIBERNATE_DDL_AUTO: update
+  SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+  SPRING_JPA_SHOW_SQL: "true"

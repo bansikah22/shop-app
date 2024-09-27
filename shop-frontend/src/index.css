@@ -1,0 +1,32 @@
+/* src/index.css */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #007BFF; /* Set the body background color */
+}
+
+h1 {
+  margin: 20px 0;
+}
+
+table {
+  margin: 20px auto; /* Center the table */
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
