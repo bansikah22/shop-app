@@ -67,8 +67,18 @@ Now you should be able to access Argo CD by navigating to https://argocd.minikub
 To get the initial admin password for Argo CD, run the following:
 ```bash
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+##Retrieve admin user
+ kubectl -n argocd get secret argocd-secret -o jsonpath="{.data.admin.password}" | base64 -d
 ```
 
 ##Debugging
+TOD0: fix admin password for argocd
+
+```bash
+echo "$(minikube ip) argocd.minikube.local" | sudo tee -a /etc/hosts
+kubectl get ingress -n argocd
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+
+```
 
 

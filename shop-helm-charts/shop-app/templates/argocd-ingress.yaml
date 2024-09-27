@@ -18,3 +18,7 @@ spec:
             name: argocd-server
             port:
               number: 443
+  # server:
+  #   metrics: enabled
+  # controller:
+  #   metrics: enabled

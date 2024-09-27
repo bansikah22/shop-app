@@ -1,5 +1,5 @@
 environment: prod
-
+#values-prod.yaml
 frontend:
   image:
     repository: bansikah/shop-frontend
