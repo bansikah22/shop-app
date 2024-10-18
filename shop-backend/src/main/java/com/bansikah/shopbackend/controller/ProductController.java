@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins = {"http://localhost:3001", "http://shop-app-dev.local"}) //Allow cross-origin requests
+@CrossOrigin(origins = {"http://localhost:3001", "http://shop-app-dev.local", "shop-app-prod.bansikah.ip-dynamic.org"}) //Allow cross-origin requests
 public class ProductController {
 
     private final ProductService productService;

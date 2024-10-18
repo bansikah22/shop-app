@@ -4,12 +4,6 @@ FROM openjdk:17-slim as build
 # Set the working directory
 WORKDIR /app
 
-# Use the official OpenJDK image as the base image
-FROM openjdk:17-slim as build
-
-# Set the working directory
-WORKDIR /app
-
 # Copy Maven wrapper files
 COPY mvnw .
 COPY .mvn .mvn
