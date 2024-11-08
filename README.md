@@ -2,6 +2,10 @@
 
 This is a full-stack e-commerce application with a React frontend and Spring Boot backend.
 
+## Action Status
+![CI-CD-status](https://github.com/bansikah22/shop-app/actions/workflows/ci-cd.yml/badge.svg?event=push)
+![Release-status](https://github.com/bansikah22/shop-app/actions/workflows/release.yaml/badge.svg?event=push)
+
 ## Prerequisites
 
 - Java JDK 17 or later
@@ -37,7 +41,6 @@ The backend will start on `http://localhost:8080`
 
 ## CONTRIBUTIONS
 Contributions are welcome! Please create a pull request for any improvements or bug fixes.
-
 
 License
 ---

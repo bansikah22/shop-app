@@ -1,0 +1,52 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up environment and install dependencies
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential make
+          sudo wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+          sudo chmod +x /usr/local/bin/hadolint
+
+      # Step 3: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # Step 4: Install frontend dependencies
+      - name: Install frontend dependencies
+        run: make frontend-install
+
+      # Step 5: Run Dockerfile lint checks
+      - name: Run Dockerfile lint checks
+        run: make lint
+
+      # Step 6: Run tests (frontend and backend)
+      - name: Run tests
+        run: make test
+
+      # Step 7: Build Maven package for backend
+      - name: Build Maven package
+        run: |
+          cd shop-backend
+          mvn clean package -DskipTests
+          cd ..
+
+      # Step 8: Build Docker images (without pushing)
+      - name: Build Docker images
+        run: make docker-build-frontend docker-build-backend
