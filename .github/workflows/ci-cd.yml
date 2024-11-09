@@ -31,7 +31,16 @@ jobs:
       - name: Install build tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y make
+          sudo apt-get install -y make wget apt-transport-https gnupg lsb-release
+
+      # Install Trivy
+      - name: Install Trivy
+        run: |
+          # Add Trivy repository
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy
 
       # Install frontend dependencies and set up environment
       - name: Install frontend dependencies
@@ -57,13 +66,6 @@ jobs:
           cd shop-backend
           mvn clean package -DskipTests
           cd ..
-
-      # Install Trivy from GitHub releases
-      - name: Install Trivy
-        run: |
-          sudo curl -sfL https://github.com/aquasecurity/trivy/releases/download/v0.30.0/trivy_0.30.0_Linux-x86_64.deb -o trivy.deb
-          sudo dpkg -i trivy.deb
-          rm trivy.deb
 
       # Run Trivy scan
       - name: Run Trivy scan
