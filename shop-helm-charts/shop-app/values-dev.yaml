@@ -5,7 +5,7 @@ frontend:
   image:
     repository: bansikah/shop-frontend
     tag: "1.2.0"
-  replicaCount: 1
+  replicaCount: 2
   env:
     REACT_APP_API_URL: "http://shop-app-dev.local/api"
   ports:
@@ -15,7 +15,7 @@ backend:
   image:
     repository: bansikah/shop-backend
     tag: "1.2.0"
-  replicaCount: 1
+  replicaCount: 2
 
 postgres:
   image:
