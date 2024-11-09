@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout code
+      # Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up environment and install dependencies
+      # Set up environment and install dependencies
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -22,13 +22,13 @@ jobs:
           sudo wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
           sudo chmod +x /usr/local/bin/hadolint
 
-      # Step 3: Set up Node.js
+      # Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      # Step 4: Install frontend dependencies
+      # Install frontend dependencies
       - name: Install frontend dependencies
         run: make frontend-install
 
@@ -36,32 +36,32 @@ jobs:
       - name: Run Dockerfile lint checks
         run: make lint
 
-      # Step 6: Run tests (frontend and backend)
+      # Run tests (frontend and backend)
       - name: Run tests
         run: make test
 
-      # Step 7: Build Maven package for backend
+      # Build Maven package for backend
       - name: Build Maven package
         run: |
           cd shop-backend
           mvn clean package -DskipTests
           cd ..
 
-      # Step 8: Build Docker images (without pushing)
+      # Build Docker images (without pushing)
       - name: Build Docker images
         run: make docker-build-frontend docker-build-backend
 
-      # Step 9: Tag Docker images with release version
+      # Tag Docker images with release version
       - name: Tag Docker images with release version
         run: |
           VERSION=${GITHUB_REF##*/}  # Extract release tag
-          docker tag your-dockerhub-username/shop-frontend:latest your-dockerhub-username/shop-frontend:$VERSION
-          docker tag your-dockerhub-username/shop-backend:latest your-dockerhub-username/shop-backend:$VERSION
+          docker tag bansikah/shop-frontend:latest bansikah/shop-frontend:$VERSION
+          docker tag bansikah/shop-backend:latest bansikah/shop-backend:$VERSION
 
-      # Step 10: Push Docker images to Docker Hub
+      # Push Docker images to Docker Hub
       - name: Push Docker images to Docker Hub
         run: |
           VERSION=${GITHUB_REF##*/}  # Extract release tag
           echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
-          docker push your-dockerhub-username/shop-frontend:$VERSION
-          docker push your-dockerhub-username/shop-backend:$VERSION
+          docker push bansikah/shop-frontend:$VERSION
+          docker push bansikah/shop-backend:$VERSION

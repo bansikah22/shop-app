@@ -1,4 +1,12 @@
 ### ArgoCD Development with Ingress
+
+**Prerequisites**
+Before we start, make sure you have the following tools installed:
+
+1. [Helm](https://helm.sh/docs/intro/install/)
+2. [Minikube](https://minikube.sigs.k8s.io/docs/start/?arch=%2Flinux%2Fx86-64%2Fstable%2Fbinary+download) or you can use Kind, or Civo any one of your choice
+3. [Kubectl](https://pwittrock.github.io/docs/tasks/tools/install-kubectl/)
+
 #### Install ArgoCD on Minikube 
 ```bash
 kubectl create namespace argocd
@@ -78,7 +86,6 @@ TOD0: fix admin password for argocd
 echo "$(minikube ip) argocd.minikube.local" | sudo tee -a /etc/hosts
 kubectl get ingress -n argocd
 kubectl port-forward svc/argocd-server -n argocd 8080:443
-
 ```
 
 

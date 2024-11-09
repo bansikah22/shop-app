@@ -1,8 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders Product Management heading', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  
+  // Check for the Product Management heading
+  const headingElement = screen.getByText(/Product Management/i);
+  expect(headingElement).toBeInTheDocument();
+  
+  // Check for the Save button
+  const buttonElement = screen.getByText(/Save/i);
+  expect(buttonElement).toBeInTheDocument();
 });

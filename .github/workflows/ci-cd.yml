@@ -10,43 +10,63 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code
+      #  Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up environment and install dependencies
+      # Set up environment and install dependencies
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential make
+          sudo apt-get install -y build-essential make wget
           sudo wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
           sudo chmod +x /usr/local/bin/hadolint
 
-      # Step 3: Set up Node.js
+      # Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      # Step 4: Install frontend dependencies
+      # Install frontend dependencies and set up environment
       - name: Install frontend dependencies
-        run: make frontend-install
+        run: make frontend-install  # Use make frontend-install instead of npm install
 
-      # Step 5: Run Dockerfile lint checks
+      # Run Dockerfile lint checks
       - name: Run Dockerfile lint checks
         run: make lint
 
-      # Step 6: Run tests (frontend and backend)
+      # Run tests (frontend and backend)
       - name: Run tests
         run: make test
 
-      # Step 7: Build Maven package for backend
+      # Build Maven package for backend
       - name: Build Maven package
         run: |
           cd shop-backend
           mvn clean package -DskipTests
           cd ..
 
-      # Step 8: Build Docker images (without pushing)
+      # Install Trivy
+      - name: Install Trivy
+        run: |
+          sudo apt-get install -y trivy
+
+      # Step 9: Run Trivy scan
+      - name: Run Trivy scan
+        run: |
+          trivy fs --exit-code 0 --severity HIGH,CRITICAL --format json --output trivy-report.json .
+
+      # Step 10: Send Trivy scan report to Discord
+      - name: Send report to Discord
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}  # Inject secret variable
+        run: |
+          REPORT=$(cat trivy-report.json)
+          curl -X POST -H "Content-Type: application/json" \
+          -d "{\"text\": \"Here is the Trivy scan report:\", \"attachments\":[{\"text\": \"$(echo "$REPORT" | jq . | head -c 1900)\"}]}" \
+          $DISCORD_WEBHOOK_URL
+
+      # Step 11: Build Docker images (without pushing)
       - name: Build Docker images
         run: make docker-build-frontend docker-build-backend
