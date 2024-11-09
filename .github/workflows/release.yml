@@ -70,6 +70,7 @@ jobs:
       - name: Tag Docker images with release version
         run: |
           VERSION=${GITHUB_REF##*/}  # Extract release tag
+          echo "Release version is $VERSION"
           docker tag bansikah/shop-frontend:latest bansikah/shop-frontend:$VERSION
           docker tag bansikah/shop-backend:latest bansikah/shop-backend:$VERSION
 
@@ -77,6 +78,7 @@ jobs:
       - name: Push Docker images to Docker Hub
         run: |
           VERSION=${GITHUB_REF##*/}  # Extract release tag
+          echo "Logging into Docker Hub with version $VERSION"
           echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
           docker push bansikah/shop-frontend:$VERSION
           docker push bansikah/shop-backend:$VERSION
