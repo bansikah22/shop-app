@@ -58,10 +58,12 @@ jobs:
           mvn clean package -DskipTests
           cd ..
 
-      # Install Trivy
+      # Install Trivy from GitHub releases
       - name: Install Trivy
         run: |
-          sudo apt-get install -y trivy
+          sudo curl -sfL https://github.com/aquasecurity/trivy/releases/download/v0.30.0/trivy_0.30.0_Linux-x86_64.deb -o trivy.deb
+          sudo dpkg -i trivy.deb
+          rm trivy.deb
 
       # Run Trivy scan
       - name: Run Trivy scan
