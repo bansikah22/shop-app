@@ -9,7 +9,7 @@ frontend-install:
 	cd $(FRONTEND_DIR) && npm install
 
 frontend-test:
-	cd $(FRONTEND_DIR) && npm run test -- --coverage --watch=false
+	cd $(FRONTEND_DIR) && npm run test -- --coverage --watch=false --detectOpenHandles
 
 frontend-build:
 	cd $(FRONTEND_DIR) && npm run build
