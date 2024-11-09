@@ -9,6 +9,29 @@ Before we start, make sure you have the following tools installed:
 
 #### Install ArgoCD on Minikube 
 ```bash
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+
+helm repo add argo https://argoproj.github.io/argo-helm
+helm repo update
+
+
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+kgp -n argocd
+
+###obtain password for admin
+kubectl get secret -n argocd argocd-initial-admin-secret -o yaml
+## Enable ingress
+minikube addons enable ingress
+##getting secret for argocd
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+
+##Access ui
+kubectl port-forward svc/argocd-server -n argocd 8082:443
+
+
+
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```
