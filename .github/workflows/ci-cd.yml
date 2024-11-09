@@ -8,6 +8,7 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    environment: github-secrets
 
     steps:
       # Checkout the code
@@ -50,21 +51,23 @@ jobs:
             exit 1
           fi
 
+      # Debugging: Check if DISCORD_WEBHOOK_URL is set
+      - name: Check if DISCORD_WEBHOOK_URL is set
+        run: |
+          if [ -z "$DISCORD_WEBHOOK_URL" ]; then
+            echo "DISCORD_WEBHOOK_URL is not set."
+            exit 1
+          else
+            echo "DISCORD_WEBHOOK_URL is set correctly."
+          fi
+
       # Send Trivy scan report to Discord
       - name: Send report to Discord
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}  # Inject secret variable
         run: |
-          # Debugging: Check if DISCORD_WEBHOOK_URL is set
-          echo "DISCORD_WEBHOOK_URL is: $DISCORD_WEBHOOK_URL"
-          
-          if [ -z "$DISCORD_WEBHOOK_URL" ]; then
-            echo "Discord webhook URL is not set."
-            exit 1
-          fi
-          
           # Send the report to Discord
           REPORT=$(cat trivy-report.json)
           curl -X POST -H "Content-Type: application/json" \
-          -d "{\"text\": \"Here is the Trivy scan report:\", \"attachments\":[{\"text\": \"$(echo "$REPORT" | jq . | head -c 1900)\"}]}" \
+          -d "{\"content\": \"Here is the Trivy scan report:\", \"embeds\":[{\"description\": \"$(echo "$REPORT" | jq . | head -c 1900)\"}]}" \
           $DISCORD_WEBHOOK_URL
