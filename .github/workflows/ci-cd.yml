@@ -8,7 +8,7 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
-    environment: github-secrets
+    environment: github-secrets  # Specify the environment where the secret is stored
 
     steps:
       # Checkout the code
@@ -51,23 +51,14 @@ jobs:
             exit 1
           fi
 
-      # Debugging: Check if DISCORD_WEBHOOK_URL is set
-      - name: Check if DISCORD_WEBHOOK_URL is set
-        run: |
-          if [ -z "$DISCORD_WEBHOOK_URL" ]; then
-            echo "DISCORD_WEBHOOK_URL is not set."
-            exit 1
-          else
-            echo "DISCORD_WEBHOOK_URL is set correctly."
-          fi
+      # Upload Trivy report as artifact (for download)
+      - name: Upload Trivy report as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: trivy-report
+          path: trivy-report.json
 
-      # Send Trivy scan report to Discord
-      - name: Send report to Discord
-        env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}  # Inject secret variable
+      # Provide the download link for the report (for human review)
+      - name: Provide Trivy report download link
         run: |
-          # Send the report to Discord
-          REPORT=$(cat trivy-report.json)
-          curl -X POST -H "Content-Type: application/json" \
-          -d "{\"content\": \"Here is the Trivy scan report:\", \"embeds\":[{\"description\": \"$(echo "$REPORT" | jq . | head -c 1900)\"}]}" \
-          $DISCORD_WEBHOOK_URL
+          echo "Trivy report has been uploaded. You can download it from the artifacts tab in the GitHub Actions UI."
