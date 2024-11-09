@@ -21,6 +21,10 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
+      # Set JAVA_HOME environment variable
+      - name: Set JAVA_HOME
+        run: echo "JAVA_HOME=${{ steps.setup-java.outputs.java-home }}" >> $GITHUB_ENV
+
       # Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
