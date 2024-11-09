@@ -80,3 +80,6 @@ jobs:
           echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
           docker push bansikah/shop-frontend:$VERSION
           docker push bansikah/shop-backend:$VERSION
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
