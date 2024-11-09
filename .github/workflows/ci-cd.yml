@@ -8,7 +8,6 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
-    environment: github-secrets  # Specify the environment where the secret is stored
 
     steps:
       # Checkout the code
@@ -22,43 +21,43 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      # Install build tools
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # Install make and other necessary build tools
       - name: Install build tools
         run: |
           sudo apt-get update
           sudo apt-get install -y make wget apt-transport-https gnupg lsb-release
 
-      # Install Trivy
-      - name: Install Trivy
-        run: |
-          # Add Trivy repository
-          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-          echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
-          sudo apt-get update
-          sudo apt-get install trivy
+      # Install frontend dependencies and set up environment
+      - name: Install frontend dependencies
+        run: make frontend-install  # Use make frontend-install instead of npm install
 
-      # Run Trivy scan
-      - name: Run Trivy scan
+      # Install hadolint for Dockerfile linting
+      - name: Install hadolint
         run: |
-          trivy fs --exit-code 0 --severity HIGH,CRITICAL --format json --output trivy-report.json .
+          sudo wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+          sudo chmod +x /usr/local/bin/hadolint
 
-      # Debugging: Check if the Trivy report is generated correctly
-      - name: Display Trivy report
+      # Run Dockerfile lint checks
+      - name: Run Dockerfile lint checks
+        run: make lint
+
+      # Run tests (frontend and backend)
+      - name: Run tests
+        run: make test
+
+      # Build Maven package for backend
+      - name: Build Maven package
         run: |
-          cat trivy-report.json
-          if [ ! -s trivy-report.json ]; then
-            echo "Trivy report is empty"
-            exit 1
-          fi
+          cd shop-backend
+          mvn clean package -DskipTests
+          cd ..
 
-      # Upload Trivy report as artifact (for download)
-      - name: Upload Trivy report as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: trivy-report
-          path: trivy-report.json
-
-      # Provide the download link for the report (for human review)
-      - name: Provide Trivy report download link
-        run: |
-          echo "Trivy report has been uploaded. You can download it from the artifacts tab in the GitHub Actions UI."
+      # Build Docker images (without pushing)
+      - name: Build Docker images
+        run: make docker-build-frontend docker-build-backend
