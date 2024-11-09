@@ -58,6 +58,6 @@ jobs:
           mvn clean package -DskipTests
           cd ..
 
-      # Build Docker images (without pushing)
+      # Build Docker images (without pushing)change
       - name: Build Docker images
         run: make docker-build-frontend docker-build-backend
