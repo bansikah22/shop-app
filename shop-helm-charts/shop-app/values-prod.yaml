@@ -21,4 +21,4 @@ postgres:
   password: prodpassword
 
 ingress:
-  host: shop-app-prod.local
+  host: shop-app-prod.com

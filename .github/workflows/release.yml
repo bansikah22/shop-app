@@ -79,9 +79,6 @@ jobs:
         run: |
           VERSION=${GITHUB_REF##*/}  # Extract release tag
           echo "Logging into Docker Hub with version $VERSION"
-          echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
+          docker login -u bansikah -p ${{secrets.DOCKER_HUB_TOKEN}}
           docker push bansikah/shop-frontend:$VERSION
           docker push bansikah/shop-backend:$VERSION
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
