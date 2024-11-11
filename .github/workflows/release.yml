@@ -73,12 +73,12 @@ jobs:
           docker tag bansikah/shop-frontend:latest bansikah/shop-frontend:$VERSION
           docker tag bansikah/shop-backend:latest bansikah/shop-backend:$VERSION
 
-      # Log in to Docker Hub using the Docker Hub token (avoid interactive login)
+      # Log in to Docker Hub using the Docker Hub token (avoiding interactive login)
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: bansikah
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}  # Use the Docker Hub token from secrets
+          username: bansikah  # Docker Hub username
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}  # Use the Docker Hub token from GitHub secrets
 
       # Push Docker images to Docker Hub
       - name: Push Docker images to Docker Hub
