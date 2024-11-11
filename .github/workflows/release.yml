@@ -6,11 +6,11 @@ on:
       - created  # Trigger when a new release is created
 
 jobs:
-  # Job to run tests and build the backend and frontend
-  build_and_test:
+  release:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -39,7 +39,7 @@ jobs:
 
       # Install frontend dependencies and set up environment
       - name: Install frontend dependencies
-        run: make frontend-install
+        run: make frontend-install  # Use make frontend-install instead of npm install
 
       # Install hadolint for Dockerfile linting
       - name: Install hadolint
@@ -62,25 +62,18 @@ jobs:
           mvn clean package -DskipTests
           cd ..
 
-  # Job to handle release-specific steps (tagging and pushing Docker images)
-  release:
-    runs-on: ubuntu-latest
-    needs: build_and_test  # This job runs after the build_and_test job is complete
-
-    steps:
-      # Checkout code again in the release job
-      - name: Checkout code
-        uses: actions/checkout@v3
+      # Build Docker images (without pushing)
+      - name: Build Docker images
+        run: make docker-build-frontend docker-build-backend
 
       # Tag Docker images with release version
       - name: Tag Docker images with release version
         run: |
           VERSION=${GITHUB_REF##*/}  # Extract release tag
-          echo "Tagging Docker images with version $VERSION"
           docker tag bansikah/shop-frontend:latest bansikah/shop-frontend:$VERSION
           docker tag bansikah/shop-backend:latest bansikah/shop-backend:$VERSION
 
-      # Log in to Docker Hub using the Docker Hub token
+      # Log in to Docker Hub using the Docker Hub token (avoid interactive login)
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
