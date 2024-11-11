@@ -66,10 +66,20 @@ jobs:
       - name: Build Docker images
         run: make docker-build-frontend docker-build-backend
 
+      # Debug GITHUB_REF
+      - name: Debug GITHUB_REF
+        run: echo "GITHUB_REF is $GITHUB_REF"
+
+      # Extract version from GITHUB_REF
+      - name: Extract version from GITHUB_REF
+        run: |
+          VERSION=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
+          echo "Release version is $VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
       # Tag Docker images with release version
       - name: Tag Docker images with release version
         run: |
-          VERSION=${GITHUB_REF##*/}  # Extract release tag
           echo "Release version is $VERSION"
           docker tag bansikah/shop-frontend:latest bansikah/shop-frontend:$VERSION
           docker tag bansikah/shop-backend:latest bansikah/shop-backend:$VERSION
@@ -77,7 +87,6 @@ jobs:
       # Push Docker images to Docker Hub
       - name: Push Docker images to Docker Hub
         run: |
-          VERSION=${GITHUB_REF##*/}  # Extract release tag
           echo "Logging into Docker Hub with version $VERSION"
           echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username bansikah --password-stdin
           docker push bansikah/shop-frontend:$VERSION
