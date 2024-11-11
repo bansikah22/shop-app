@@ -66,14 +66,10 @@ jobs:
       - name: Build Docker images
         run: make docker-build-frontend docker-build-backend
 
-      # Debug GITHUB_REF
-      - name: Debug GITHUB_REF
-        run: echo "GITHUB_REF is $GITHUB_REF"
-
-      # Extract version from GITHUB_REF
+      # Extract version from GITHUB_REF using the method from the research
       - name: Extract version from GITHUB_REF
         run: |
-          VERSION=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
+          VERSION=${GITHUB_REF#refs/tags/}
           echo "Release version is $VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
