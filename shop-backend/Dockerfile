@@ -1,5 +1,5 @@
 # First stage: Build the application
-FROM openjdk:17-slim as builder
+FROM openjdk:24-ea-22-oraclelinux8 as builder
 
 # Set the working directory
 WORKDIR /app
@@ -16,7 +16,7 @@ COPY src ./src
 RUN chmod +x mvnw && ./mvnw clean package -DskipTests
 
 # Second stage: Create a smaller image for the application
-FROM openjdk:17-slim
+FROM openjdk:24-ea-22-oraclelinux8
 
 # Set the working directory
 WORKDIR /app
