@@ -4,7 +4,7 @@ This is a full-stack e-commerce application with a React frontend and Spring Boo
 
 ## Action Status
 ![CI-CD-status](https://github.com/bansikah22/shop-app/actions/workflows/ci-cd.yml/badge.svg?event=push)
-![Release-status](https://github.com/bansikah22/shop-app/actions/workflows/release.yaml/badge.svg?event=push)
+![Release-status](https://github.com/bansikah22/shop-app/actions/workflows/release.yml/badge.svg?event=push)
 
 ## Prerequisites
 
