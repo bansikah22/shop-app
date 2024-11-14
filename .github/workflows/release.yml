@@ -36,7 +36,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y make wget apt-transport-https gnupg lsb-release
-          
+
       # Install frontend dependencies and set up environment
       - name: Install frontend dependencies
         run: make frontend-install  # Use make frontend-install instead of npm install
@@ -83,12 +83,21 @@ jobs:
           echo "Release tag: ${{ env.RELEASE_TAG }}"
           echo "Environment Release Tag: ${{ env.RELEASE_TAG }}"
 
-      # Build Docker images with the release tag
+      # Build Docker images with the release tag and environment variables
       - name: Build Docker images
         run: |
           echo "Building Docker images with tag: ${{ env.RELEASE_TAG }}"
-          docker build -t bansikah/shop-frontend:${{ env.RELEASE_TAG }} ./shop-frontend
-          docker build -t bansikah/shop-backend:${{ env.RELEASE_TAG }} ./shop-backend
+
+          # Build the frontend Docker image with the environment variable
+          docker build \
+            --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} \
+            -t bansikah/shop-frontend:${{ env.RELEASE_TAG }} \
+            ./shop-frontend
+
+          # Build the backend Docker image
+          docker build \
+            -t bansikah/shop-backend:${{ env.RELEASE_TAG }} \
+            ./shop-backend
 
       # Log in to Docker Hub
       - name: Log in to Docker Hub
