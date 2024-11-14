@@ -61,7 +61,12 @@ jobs:
           cd shop-backend
           mvn clean package -DskipTests
           cd ..
-      
+
+      # Remove old Docker images
+      - name: Remove old Docker images
+        run: |
+          docker image prune -af
+
       # Capture the release tag
       - name: Get Release Tag
         id: release_tag
@@ -69,6 +74,7 @@ jobs:
           TAG_NAME=${GITHUB_REF#refs/tags/}
           echo "RELEASE_TAG=$TAG_NAME" >> $GITHUB_ENV
           echo "Captured Release Tag: $TAG_NAME"
+          echo "Environment variable RELEASE_TAG set to: ${{ env.RELEASE_TAG }}"
 
       # Check the release tag (for debugging)
       - name: Check Release Tag
@@ -80,6 +86,7 @@ jobs:
       # Build Docker images with the release tag
       - name: Build Docker images
         run: |
+          echo "Building Docker images with tag: ${{ env.RELEASE_TAG }}"
           docker build -t bansikah/shop-frontend:${{ env.RELEASE_TAG }} ./shop-frontend
           docker build -t bansikah/shop-backend:${{ env.RELEASE_TAG }} ./shop-backend
 
