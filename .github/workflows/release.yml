@@ -62,11 +62,16 @@ jobs:
           mvn clean package -DskipTests
           cd ..
 
-      # Build Docker images
+      # Get release tag
+      - name: Get Release Tag
+        id: get_tag
+        run: echo "RELEASE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      # Build Docker images with release tag
       - name: Build Docker images
         run: |
-          docker build -t bansikah/shop-frontend:latest ./shop-frontend
-          docker build -t bansikah/shop-backend:latest ./shop-backend
+          docker build -t bansikah/shop-frontend:${{ env.RELEASE_TAG }} ./shop-frontend
+          docker build -t bansikah/shop-backend:${{ env.RELEASE_TAG }} ./shop-backend
 
       # Log in to Docker Hub
       - name: Log in to Docker Hub
@@ -75,11 +80,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Push Docker images to Docker Hub
+      # Push Docker images to Docker Hub with release tag
       - name: Push Docker images to Docker Hub
         run: |
-          docker push bansikah/shop-frontend:latest
-          docker push bansikah/shop-backend:latest
+          docker push bansikah/shop-frontend:${{ env.RELEASE_TAG }}
+          docker push bansikah/shop-backend:${{ env.RELEASE_TAG }}
 
       # Logout from Docker Hub
       - name: Logout from Docker Hub
