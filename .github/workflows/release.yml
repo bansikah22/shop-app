@@ -36,7 +36,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y make wget apt-transport-https gnupg lsb-release
-
+          
       # Install frontend dependencies and set up environment
       - name: Install frontend dependencies
         run: make frontend-install  # Use make frontend-install instead of npm install
@@ -61,13 +61,18 @@ jobs:
           cd shop-backend
           mvn clean package -DskipTests
           cd ..
-
-      # Get release tag
+      
+      # Capture the release tag
       - name: Get Release Tag
-        id: get_tag
+        id: release_tag
         run: echo "RELEASE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
-      # Build Docker images with release tag
+           # Check the release tag (for debugging)
+      - name: Check Release Tag
+        run: |
+          echo "Release tag: ${{ env.RELEASE_TAG }}"
+
+      # Build Docker images with the release tag
       - name: Build Docker images
         run: |
           docker build -t bansikah/shop-frontend:${{ env.RELEASE_TAG }} ./shop-frontend
@@ -80,7 +85,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Push Docker images to Docker Hub with release tag
+      # Push Docker images to Docker Hub with the release tag
       - name: Push Docker images to Docker Hub
         run: |
           docker push bansikah/shop-frontend:${{ env.RELEASE_TAG }}
