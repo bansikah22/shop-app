@@ -65,12 +65,17 @@ jobs:
       # Capture the release tag
       - name: Get Release Tag
         id: release_tag
-        run: echo "RELEASE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          echo "RELEASE_TAG=$TAG_NAME" >> $GITHUB_ENV
+          echo "Captured Release Tag: $TAG_NAME"
 
-           # Check the release tag (for debugging)
+      # Check the release tag (for debugging)
       - name: Check Release Tag
         run: |
+          echo "GITHUB_REF: $GITHUB_REF"
           echo "Release tag: ${{ env.RELEASE_TAG }}"
+          echo "Environment Release Tag: ${{ env.RELEASE_TAG }}"
 
       # Build Docker images with the release tag
       - name: Build Docker images
