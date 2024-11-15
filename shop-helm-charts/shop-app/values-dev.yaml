@@ -22,8 +22,10 @@ postgres:
     repository: postgres
     tag: latest
   database: shopdb
-  username: postgresuser
-  password: postgrespass  
+  # Generate the username and password if not explicitly provided
+  username: ""
+  password: ""  
+
 
 ingress:
   host: shop-app-dev.local  

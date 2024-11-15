@@ -12,6 +12,7 @@ spec:
       labels:
         app: postgres
     spec:
+      serviceAccountName: {{ .Release.Name }}-postgres-sa
       containers:
       - name: postgres
         image: {{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}
@@ -19,8 +20,17 @@ spec:
         - containerPort: 5432
         env:
         - name: POSTGRES_DB
-          value: {{ .Values.postgres.database }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-postgres-secret
+              key: POSTGRES_DB
         - name: POSTGRES_USER
-          value: {{ .Values.postgres.username }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-postgres-secret
+              key: POSTGRES_USER
         - name: POSTGRES_PASSWORD
-          value: {{ .Values.postgres.password }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-postgres-secret
+              key: POSTGRES_PASSWORD
