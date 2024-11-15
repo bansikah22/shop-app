@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  ci:
+  ci-cd:
     runs-on: ubuntu-latest
 
     steps:
