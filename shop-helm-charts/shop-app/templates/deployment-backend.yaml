@@ -22,3 +22,9 @@ spec:
             name: {{ .Release.Name }}-config
         - secretRef:
             name: {{ .Release.Name }}-postgres-secret
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
