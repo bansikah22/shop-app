@@ -21,11 +21,10 @@ postgres:
   image:
     repository: postgres
     tag: latest
+  replicaCount: 1
   database: shopdb
-  # Generate the username and password if not explicitly provided
-  username: ""
-  password: ""  
-
+  username: "postgresuser"
+  password: "postgrespass"  
 
 ingress:
   host: shop-app-dev.local  
