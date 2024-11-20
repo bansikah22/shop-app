@@ -12,6 +12,8 @@ spec:
       labels:
         app: backend
     spec:
+      nodeSelector:
+        {{- .Values.backend.nodeSelector | toYaml | nindent 8 }}
       containers:
       - name: backend
         image: {{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}
@@ -21,10 +23,4 @@ spec:
         - configMapRef:
             name: {{ .Release.Name }}-config
         - secretRef:
-            name: {{ .Release.Name }}-postgres-secret
-        readinessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 8080
-          initialDelaySeconds: 10
-          periodSeconds: 5
+            name: {{ .Release.Name }}-secret

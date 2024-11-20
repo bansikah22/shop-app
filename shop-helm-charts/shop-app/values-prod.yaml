@@ -1,20 +1,16 @@
-##values-dev.yaml
-environment: prod 
+#values-prod.yaml
+environment: prod
 
 frontend:
   image:
     repository: bansikah/shop-frontend
-    tag: "1.2.0"
+    tag: "1.1"
   replicaCount: 2
-  env:
-    REACT_APP_API_URL: "http://shop-app-dev.local/api"
-  ports:
-    - containerPort: 80
 
 backend:
   image:
     repository: bansikah/shop-backend
-    tag: "1.2.0"
+    tag: "1.1"
   replicaCount: 2
 
 postgres:
@@ -22,9 +18,8 @@ postgres:
     repository: postgres
     tag: latest
   database: shopdb
-  # Generate the username and password if not explicitly provided
-  username: ""
-  password: ""  
+#removed user name and password
+
 
 ingress:
-  host: shop-app-dev.com 
+  host: shop-app-prod.local

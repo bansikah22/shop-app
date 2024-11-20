@@ -12,6 +12,8 @@ spec:
       labels:
         app: frontend
     spec:
+      nodeSelector:
+        {{- .Values.frontend.nodeSelector | toYaml | nindent 8 }}
       containers:
       - name: frontend
         image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}
