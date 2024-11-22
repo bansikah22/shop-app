@@ -27,6 +27,7 @@ postgres:
     repository: postgres
     tag: latest
   database: shopdb
+  serviceType: NodePort
 #removed user name and password
   nodeSelector:
     role: worker  

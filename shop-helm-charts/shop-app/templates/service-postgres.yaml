@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ .Release.Name }}-postgres
 spec:
-  type: NodePort
+  type: {{ Values.postgres.serviceType}}
   selector:
     app: postgres
   ports:
