@@ -24,7 +24,7 @@ services:
       - "traefik.http.routers.frontend.rule=Host(`shop-app-dev.local`)"  
       - "traefik.http.services.frontend.loadbalancer.server.port=80"
     networks:
-      - app-network
+      - shop-net
     depends_on:
       - backend  
 
@@ -43,7 +43,7 @@ services:
       - "traefik.http.routers.backend.rule=Host(`shop-app-dev.local`)"  
       - "traefik.http.services.backend.loadbalancer.server.port=8080"
     networks:
-      - app-network
+      - shop-net
     depends_on:
       - postgres  
 
