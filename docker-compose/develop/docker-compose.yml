@@ -1,0 +1,68 @@
+version: '3.7'
+
+services:
+  # Traefik as the reverse proxy
+  traefik:
+    image: traefik:v3.0
+    command:
+      - "--api.insecure=true"  # Enable the Traefik dashboard (optional, for debugging purposes)
+      - "--providers.docker=true"  # Enable Docker provider
+      - "--entrypoints.web.address=:80"  # HTTP entry point
+    ports:
+      - "80:80"  
+      #- "8080:8080" 
+    networks:
+      - shop-net
+
+  # Frontend - React app
+  frontend:
+    image: bansikah/shop-frontend:1.2.0
+    environment:
+      REACT_APP_API_URL: ${REACT_APP_API_URL}  
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`shop-app-dev.local`)"  
+      - "traefik.http.services.frontend.loadbalancer.server.port=80"
+    networks:
+      - app-network
+    depends_on:
+      - backend  
+
+  # Backend - Spring Boot app
+  backend:
+    image: bansikah/shop-backend:1.2.0
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL} 
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    ports:
+      - "8080:8080"  
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`shop-app-dev.local`)"  
+      - "traefik.http.services.backend.loadbalancer.server.port=8080"
+    networks:
+      - app-network
+    depends_on:
+      - postgres  
+
+  # PostgreSQL database
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}  
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data 
+    networks:
+      - shop-net
+
+networks:
+  shop-net:
+    driver: bridge
+
+# Define volume to persist PostgreSQL data
+volumes:
+  postgres-data:

@@ -20,6 +20,7 @@ postgres:
   database: shopdb
 #removed user name and password
 
-
 ingress:
-  host: shop-app-prod.local
+  tls:
+    - hosts:
+        - shop-app.prod.bansikahadorsys.com
