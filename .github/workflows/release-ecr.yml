@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  AWS_REGION: MY_AWS_REGION                   #  desired region
+  AWS_REGION: eu-central-1                   
   ECR_REPOSITORY_FRONTEND: shop-frontend      # Amazon ECR repository for the frontend
   ECR_REPOSITORY_BACKEND: shop-backend        # Amazon ECR repository for the backend
 
