@@ -4,6 +4,7 @@ on:
   release:
     types:
       - created  # Trigger when a new release is created
+  workflow_dispatch:
 
 jobs:
   release:
