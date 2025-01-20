@@ -1,5 +1,5 @@
 # Dockerfile
-FROM node:18 AS build
+FROM node:18 as build
 
 WORKDIR /app
 
@@ -7,8 +7,8 @@ COPY package*.json ./
 RUN npm install
 
 # Use build argument for environment variables
-#ARG REACT_APP_API_URL
-#ENV REACT_APP_API_URL=$REACT_APP_API_URL
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
 
 # Copy all other files and build the project
 COPY . .
