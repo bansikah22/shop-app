@@ -16,7 +16,7 @@ COPY . .
 RUN npm run build
 
 # Use nginx to serve the built files
-FROM nginx:alpine
+FROM nginx:1.29.5-alpine3.23
 COPY --from=build /app/build /usr/share/nginx/html
 
 EXPOSE 80
